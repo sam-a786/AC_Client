@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <title>Create New Form</title>
+    {% include "navbar.html" %}
+  </head>
+  <style>
+  .container{
+    width: 80%;
+  }
+  </style>
+
+  <body>
+
+    <div class="container">
+      {% block titleBlock%}
+      <h1 class = "text-center">Create New Order</h1>
+      {%endblock%}
+
+      {% block companyBlock%}
+      <form name = "createnewform"  method="post" action="/RenderForm">
+        <div class="pt-3 pb-4">
+          <label for="inputState">Company</label>
+          <select name="formCompanyName" id="companyName" class="form-control" required>
+              <option value=""> -- Select Company -- </option>
+              {% for item in companies %}
+              <option value={{item[0]}}>{{item[1]}}</option>
+              {% endfor %}
+          </select>
+        </div>
+      {%endblock%}
+
+        <label for="products pb-2">Select Your Products</label>
+        <input class="form-control pb-2" type="text" id="myInput" onkeyup="searchProducts()" autocomplete="off" placeholder="Search for products">
+        <div style="overflow: scroll; height: 300px;">
+        <table id="productTable" class="table table-bordered pt-1">
+          <thead>
+            <tr>
+              <th scope="col">Product ID</th>
+              <th scope="col">Product Name</th>
+              <th scope="col">Condition</th>
+              <th scope="col">Origin</th>
+              <th style="width: 10%" scope="col">Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in products %}
+            <tr>
+              <th scope="row">{{item[0]}}</th>
+              <td>{{item[1]}}</td>
+              <td>{{item[2]}}</td>
+              <td>{{item[4]}}</td>
+              <td>
+                <input name="quantity_input" autocomplete="off" placeholder="0" type="number" min="0" pattern="\d*" class="form-control">
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+
+        <div class="form-row pt-4">
+        {% block ConsignmentBlock%}
+          <div class="col">
+            <label>Consignment Number</label>
+            <input name="consignmentNumber" autocomplete="off" type="text" class="form-control" placeholder="Enter consignment number" required>
+          </div>
+        {%endblock%}
+
+        {% block WeightBlock%}
+          <div class="col">
+            <label>Weight</label>
+            <input name="weight" type="number" min="0" step="0.1" class="form-control" placeholder="0" required>
+          </div>
+        {%endblock%}
+
+        {% block BoxesBlock%}
+          <div class="col">
+            <label>Number Of Boxes</label>
+            <input name="numberOfBoxes" type="number" min="0" pattern="\d*" class="form-control" placeholder="0" required>
+          </div>
+        {%endblock%}
+        </div>
+
+        <div id="dataDiv" style="display:none">
+          <input class="form-control" value="" id="dataElement" name="listedQuantities" readonly/>
+        </div>
+
+        {% block dateBlock%}
+        <div class="form-group pb-4 pt-4">
+          <label for="order-date">Order Date</label>
+          <input class="form-control" type="date" id="order-date" name="orderDate" min="2020-01-01" required/>
+        </div>
+        {%endblock%}
+
+        <div id="missing-alert" style="display: none;" class="alert alert-danger" role="alert">
+          Some Data is Missing From This Form
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block" onclick="findQuantities()" >Submit</button>
+        <div class="p-2"></div>
+      </form>
+
+    </div>
+  </body>
+
+  <script>
+
+
+    var data_element = document.getElementById('dataElement');
+    var quantity_inputs = document.getElementsByName('quantity_input')
+
+    // THIS IS NO LONGER NEEDED
+
+    // function grab_from_table(){
+    //   for (var i = 0, row; row = table.rows[i]; i++) {
+    //     //iterate through rows
+    //     //rows would be accessed using the "row" variable assigned in the for loop
+    //     for (var j = 0, col; col = row.cells[j]; j++) {
+    //       //iterate through columns
+    //       console.log(col.firstChild.nodeValue)
+    //        //columns would be accessed using the "col" variable assigned in the for loop
+    //        }
+    //   }
+    // }
+
+    // function checkForm(){
+    //   if (allEqual(quantities) == true){
+    //     document.getElementById('missing-alert').style.display = "block";
+    //     }
+
+    // }
+
+
+    function findQuantities(){
+      var quantities = []
+      console.log(quantity_inputs)
+      for (let i = 0; i < quantity_inputs.length; i++) {
+        if (quantity_inputs[i].value == ""){
+          quantities.push("0")
+        } else {
+        quantities.push(quantity_inputs[i].value);
+        };
+      };
+      console.log(quantities)
+
+      data_element.value = quantities;
+
+    }
+
+    // THIS IS NO LONGER NEEDED
+
+    // function submitProduct(item){
+    //   console.log(item)
+    //   var checkBox = document.getElementById(item);
+    //   if ((checkBox.checked == true) && (products.includes(item) == false)){
+    //     products.push(item);
+    //     console.log(products);
+    //   } else if(checkBox.checked == false) {
+    //     products.pop(item);
+    //     console.log(products);
+
+    //   }
+
+    //   data_element.value = products;
+    //   };
+
+  </script>
+
+<script>
+
+// Code to perform table search
+// taken from W3Schools
+// accessed 01/12/2020
+// https://www.w3schools.com/howto/howto_js_filter_table.asp
+
+  function searchProducts() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("productTable");
+    tr = table.getElementsByTagName("tr");
+
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
+  // end of referenced code.
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</html>

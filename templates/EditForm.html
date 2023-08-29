@@ -1,0 +1,51 @@
+{%extends 'CreateNewForm.html'%}
+{% block titleBlock%} <h1 class = "text-center pt-3"> Edit Order {{order_id}} </h1> {%endblock%}
+
+{% block companyBlock%}
+<form name = "createnewform"  method="post" action="/RenderForm">
+  <div class="pt-3 pb-4">
+    <label for="inputState">Company</label>
+    <select name="formCompanyName" id="companyName" class="form-control" required>
+        <option value=""> -- Select Company -- </option>
+        {% for item in companies %}
+        {% if item[1] == company_detail[0][0] %}
+        <option value={{item[0]}} selected> {{item[1]}} </option>
+        {% else %}
+        <option value={{item[0]}}> {{item[1]}} </option>
+        {% endif %}
+        {% endfor %}
+    </select>
+  </div>
+{%endblock%}
+
+
+{% block ConsignmentBlock%}
+  <div class="col">
+    <label>Consignment Number</label>
+    <input name="consignmentNumber" autocomplete="off" type="text" class="form-control"  value="{{consignment_detail[0][0]}}" required>
+  </div>
+{%endblock%}
+
+
+{% block WeightBlock%}
+  <div class="col">
+    <label>Weight</label>
+    <input name="weight" type="number" min="0" step="0.1" class="form-control" value="{{weight_detail[0][0]}}" required>
+  </div>
+{%endblock%}
+
+
+{% block BoxesBlock%}
+  <div class="col">
+    <label>Number Of Boxes</label>
+    <input name="numberOfBoxes" type="number" min="0" pattern="\d*" class="form-control" value="{{box_detail[0][0]}}" required>
+  </div>
+{%endblock%}
+
+
+{% block dateBlock%}
+<div class="form-group pb-4 pt-4">
+  <label for="order-date">Order Date</label>
+  <input class="form-control" type="date" id="order-date" name="orderDate" min="2020-01-01" value="{{date_detail[0][0]}}" required/>
+</div>
+{%endblock%}

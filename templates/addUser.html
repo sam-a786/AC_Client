@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <title>User options</title>
+
+<style>
+
+h1{
+  color: black;
+  text-align: center;
+}
+
+#ViewUsers{
+  text-align: center;
+  border-radius: 20px;
+  border-width: thick;
+  background-color: lightgrey;
+  margin-top: 50px;
+  width: 900px;
+  display: none;
+}
+
+#AddUser{
+  text-align: center;
+  border-radius: 20px;
+  border-width: thick;
+  background-color: lightgrey;
+  margin-top: 50px;
+  width: 900px;
+  display: none;
+}
+
+#revokeAdmin{
+  text-align: center;
+  border-radius: 20px;
+  border-width: thick;
+  background-color: lightgrey;
+  margin-top: 50px;
+  width: 900px;
+  display: none;
+}
+
+
+
+</style>
+
+{% include "navbar.html" %}
+</head>
+
+<body>
+<!--add buttons for each form, once clicked, forms should appear-->
+  <h1 draggable="true"; title:"page-name" href="#UserOptions">User Options</h1><br>
+
+<div class="container">
+
+<div id="form buttons" class="text-center">
+  <button class="btn btn-outline-dark" type="button" onclick="showHideOne()" >View users</button>
+  <button class="btn btn-outline-dark" type="button" onclick="showHideTwo()">Add users form</button>
+  <button class="btn btn-outline-dark" type="button" onclick="showHideThree()">Admin rights form</button>
+</div>
+
+
+<div id="ViewUsers" class="container">
+  <form name="viewusers" method="GET">
+    <h4><b>View users</b><br><br>
+        Username:<br>
+
+            <input class="form-control pb-2" type="text" id="userSearch" onkeyup="searchUser()" autocomplete="off" placeholder="Search for users"><br>
+            <div style="overflow: scroll; height: 300px;">
+            <table id="userTable" class="table table-bordered pt-1">
+              <thead>
+                <tr>
+                  <th scope="col">User ID</th>
+                  <th scope="col">User name</th>
+                  <th scope="col">Admin status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for userName in members %}
+                <tr>
+                  <th scope="row">{{userName[0]}}</th>
+                  <td>{{userName[1]}}</td>
+                  <td>{{userName[3]}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            </div>
+      </form>
+
+</div>
+
+
+
+<div id="AddUser" class="container">
+  <form name="adduser" method="POST">
+    <h4><b>Add users</b><br><br>
+          Username:<br>
+          <input name="username" type="text" autocomplete="off" placeholder="Enter Username" class="form-control" required><br>
+          Password:<br>
+          <input name ="password" type="password" autocomplete="off" placeholder="Enter Password" class="form-control" required><br><br>
+          Give admin rights:<br>
+          <input name="admin" type="checkbox" value="on"><br>
+    <button type="submit" class="btn btn-outline-dark" name="add" onsubmit="return AUval()">Add User</button>
+  </form>
+</div>
+
+
+<div id="revokeAdmin" class="container">
+  <form name="revoke" method = "POST" onsubmit="return status()">
+    <h4><b>Admin rights</b><br><br>
+      User ID:<br><br>
+      <input name="UserID" type="number" min="1" autocomplete="off" placeholder="Enter User ID" class="form-control" required><br><br>
+      <p id="APmessage"></p>
+      Rights:<br><br>
+      Give admin rights:<input name="right_admin" type="radio" value="true"><br><br>
+      Remove admin rights:<input name="right_admin" type="radio" value="false"><br><br>
+      Remove access to sytem: <input name="right_admin" type="radio" value="None"><br><br>
+   <button type="submit" class="btn btn-outline-dark" name="revoke">Submit</button><!--JS to alert user of their action-->
+  </form>
+</div>
+
+<script>
+// <!--JS to alert user of their action-->
+function showHideOne() {
+  var x = document.getElementById("ViewUsers");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+function showHideTwo() {
+  var x = document.getElementById("AddUser");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+
+
+function showHideThree() {
+  var x = document.getElementById("revokeAdmin");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+
+function status(){
+  alert("You are about to change this user's status")
+}
+
+
+function searchUser() {
+
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("userSearch");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("userTable");       //search funtion used from https://www.w3schools.com/howto/howto_js_filter_table.asp, accesssed 12/12/20
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+</script>
+
+</body>
+</html>

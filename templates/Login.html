@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Delivery/Packing note login</title>
+    <link href = "/static/css/bootstrap.min.css" rel = "stylesheet" type = "text/css" />
+
+    <style>
+
+    .container-form{
+      width: 350px;
+      box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+      background: #f0f0f5;
+      padding: 40px;
+      margin: 10% auto;
+      text-align: center;
+    }
+    #header{
+      text-align: center;
+    }
+      </style>
+
+  </head>
+  <body>
+
+    <div class="container-form">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+          {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{ message }}
+          </div>
+          {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+        <h4 id = "header"> Sign in </h4>
+
+
+        <form id = "form"  name = "Login" action = "/Login" onsubmit="return Cookie()" method = "POST" class="was-validated">
+            <div class = "input-group-sm">
+              <label for = "username" class = "label"> Username
+                <input class = "form-control" type="text" id = "username" name = "username" placeholder = "Username" autocomplete="off" required autofocus>
+                <div class="invalid-feedback">Please fill out this field. </div>
+              </label>
+            </div>
+
+            <div class = "input-group-sm">
+            <label for = "password" class = "label"> Password
+                <input class="form-control" type="password" id = "password" name = "password" placeholder = "Password" required>
+                <div class="invalid-feedback">Please fill out this field. </div>
+            </label>
+          </div>
+            <button type="submit" class="btn btn-primary btn-sm">Login</button>
+
+        </form>
+
+    </div>
+
+
+    <script>
+      function Cookie() {
+        alert("Cookies are in use")
+      }
+    </script>
+  </body>
+</html>
